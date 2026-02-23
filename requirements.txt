@@ -2,3 +2,10 @@ streamlit
 python-dotenv
 langchain-community
 langchain-groq
+langchain
+langchain-core
+langchain-chroma
+langchain-huggingface
+chromadb
+pypdf
+sentence-transformers
