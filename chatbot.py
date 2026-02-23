@@ -1,6 +1,7 @@
 from dotenv import load_dotenv
 import streamlit as st
 from langchain_groq import ChatGroq
+from langchain_core.messages import HumanMessage, AIMessage
 
 # Load environment variables from .env file
 load_dotenv()
@@ -24,7 +25,7 @@ for message in st.session_state.chat_history:
 
 # llm initialization
 llm = ChatGroq(
-    model="llama-3.3-70b-vesatile",
+    model="llama-3.3-70b-versatile",
     temperature=0.0,
 )
 
@@ -35,10 +36,14 @@ if user_prompt:
     st.chat_message("user").markdown(user_prompt)
     st.session_state.chat_history.append({"role": "user", "content": user_prompt})
 
-    response = llm.invoke(
-        input= [{"role": "user", "content": "You are a helpful assistant"}, *st.session_state.chat_history]
-    )
-    assistant_response = resonse.content
+    # Convert chat history to LangChain message objects
+    messages = [
+        HumanMessage(content=msg["content"]) if msg["role"] == "user" else AIMessage(content=msg["content"])
+        for msg in st.session_state.chat_history
+    ]
+    
+    response = llm.invoke(input=messages)
+    assistant_response = response.content
     st.session_state.chat_history.append({"role": "assistant", "content": assistant_response})
 
     with st.chat_message("assistant"):
