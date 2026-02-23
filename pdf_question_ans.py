@@ -58,7 +58,7 @@ if uploaded_file is not None:
     vector_store = Chroma.from_documents(
         docs,
         embedding,
-        persist_directory="./chroma_db"
+        persist_directory=None
     )
 
     retriever = vector_store.as_retriever()
